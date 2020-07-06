@@ -6,29 +6,33 @@ class Vector:
     """
     Implementation of a vector.
     """
-    def __init__(self, row, column):
-        if (row != 0) and (column != 0):
+    def __init__(self, row=None, column=None):
+        if row and all(isinstance(k, list) for k in row):
+            column = row
+            row = None
+        if row or column:
             self.row = row
             self.column = column
             self.__all__ = []
         else:
-            self.row = 0
-            self.column = 0
+            self.row = self.column = None
             raise VectorError("Failed to parse vector: No arguments specified!")
         # self.size = [row, column]
     
     def transpose(self):
         if self.row: # Row vector
-            # TODO: Transpose to column
-            pass
+            return Vector(column=[[k] for k in self.row])
+        return Vector(sum(self.column, []))
+    
+    def __add__(self, other):
+        if self.row and other.row:
+            return Vector([self.row[k] + other.row[k] for k in range(len(self.row))])
+        if self.column and other.column:
+            return (self.transpose() + other.transpose()).transpose()
         else:
-            # TODO: Transpose to vector
             pass
     
-    def add(self):
-        pass
-    
-    def subtract(self, vector2):
+    def subtract(self, other):
         pass
 
 vector = Vector()
